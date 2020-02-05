@@ -8,7 +8,7 @@ class App {
     protected account: string = 'garbast';
 
     constructor() {
-        console.log('app loaded more');
+        console.log('app loaded more again');
     }
 }
 new App();
