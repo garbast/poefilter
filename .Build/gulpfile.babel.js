@@ -20,7 +20,7 @@ import tsify from 'tsify';
 const server = browserSync.create();
 
 const paths = {
-    src: '../src',
+    src: 'src',
     dest: '../public/Resources/Public'
 };
 
@@ -45,7 +45,7 @@ let typescriptTask = () => {
     });
 
     return b
-        .plugin(tsify)
+        .plugin(tsify, { project: 'tsconfig.json' })
         .bundle()
         .pipe(source('app.js'))
         .pipe(buffer())

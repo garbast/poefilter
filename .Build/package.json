@@ -10,8 +10,8 @@
   "author": "Sebastian Fischer",
   "license": "GPL-2.0-or-later",
   "dependencies": {
-    "@types/jquery": "2.0.47",
-    "jquery": "3.4.1"
+		"@types/jquery": "^3.3.32",
+    "jquery": "^3.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
