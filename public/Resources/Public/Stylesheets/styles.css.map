@@ -1,0 +1,1 @@
+{"version":3,"sources":["styles.scss"],"names":[],"mappings":"AAAA;EACE,cAAc;EACd,YAAY;EACZ,WAAW;EACX,uBAAuB,EAAA","file":"styles.css","sourcesContent":["#app {\r\n  display: block;\r\n  height: 50px;\r\n  width: 50px;\r\n  border: 1px solid green;\r\n}\r\n"]}
