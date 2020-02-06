@@ -10612,12 +10612,17 @@ var App = /** @class */ (function () {
         this.leagueEndpoint = 'https://api.pathofexile.com/league/Hardcore';
         this.league = 'Metamorph';
         this.account = 'garbast';
+        this.cookie = '2daa91301a943bef61160ef286ff05f0';
         this.fetchTabData();
     }
     App.prototype.fetchTabData = function () {
         $.ajax({
-            url: this.publicStashTabsEndpoint,
-            dataType: 'jsonp'
+            url: 'http://localhost:9000',
+            method: 'POST',
+            data: {
+                endpoint: this.publicStashTabsEndpoint,
+                cookie: this.cookie
+            }
         }).done(function (league) {
             console.log('Got', league.id, 'league');
         });

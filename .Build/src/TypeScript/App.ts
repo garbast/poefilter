@@ -16,14 +16,20 @@ class App {
 
   protected account: string = 'garbast';
 
+  protected cookie: string = '2daa91301a943bef61160ef286ff05f0';
+
   constructor() {
     this.fetchTabData();
   }
 
   fetchTabData(): void {
     $.ajax({
-      url: this.publicStashTabsEndpoint,
-      dataType: 'jsonp'
+      url: 'http://localhost:9000',
+      method: 'POST',
+      data: {
+        endpoint: this.publicStashTabsEndpoint,
+        cookie: this.cookie
+      }
     }).done(function(league: any) {
       console.log('Got', league.id, 'league');
     });

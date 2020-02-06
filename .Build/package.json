@@ -10,7 +10,7 @@
   "author": "Sebastian Fischer",
   "license": "GPL-2.0-or-later",
   "dependencies": {
-		"@types/jquery": "^3.3.32",
+    "@types/jquery": "^3.3.32",
     "jquery": "^3.4.1"
   },
   "devDependencies": {
