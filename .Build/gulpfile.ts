@@ -1,24 +1,28 @@
 'use strict';
 
-import {src, dest, series, watch} from 'gulp';
-import log from 'gulplog';
-import postcss from 'gulp-postcss';
-import rename from 'gulp-rename';
-import sass from 'gulp-sass';
-import sourcemaps from 'gulp-sourcemaps';
-import uglify from 'gulp-uglify';
+// Common
+import * as gulp from 'gulp';
+import * as path from 'path';
 
-import autoprefixer from 'autoprefixer';
-import browserSync from 'browser-sync';
-import browserify from 'browserify';
-import http from 'http';
-import normalize from 'node-normalize-scss';
-import path from 'path';
-import buffer from 'vinyl-buffer';
-import source from 'vinyl-source-stream';
-import tsify from 'tsify';
+// JS
+import * as browserify from 'browserify';
+import * as tsify from 'tsify';
+import * as source from 'vinyl-source-stream';
+import * as buffer from 'vinyl-buffer';
+import * as uglify from 'gulp-uglify';
+import * as log from 'gulplog';
+import * as rename from 'gulp-rename';
 
-const server = browserSync.create();
+// CSS
+import * as sourcemaps from 'gulp-sourcemaps';
+import * as normalize from 'node-normalize-scss';
+import * as sass from 'gulp-sass';
+import * as autoprefixer from 'autoprefixer';
+import * as postcss from 'gulp-postcss';
+
+// Serve
+import * as browserSync from 'browser-sync';
+import * as http from 'http';
 
 const paths = {
   src: 'src',
@@ -36,6 +40,8 @@ const tasks = {
   }
 };
 
+const server = browserSync.create();
+
 // JS
 let typescriptTask = () => {
   let b = browserify({
@@ -52,19 +58,19 @@ let typescriptTask = () => {
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
     // This will output the non-minified version
-    .pipe(dest(path.join(paths.dest, tasks.typescript.dest)))
+    .pipe(gulp.dest(path.join(paths.dest, tasks.typescript.dest)))
     // Add transformation tasks to the pipeline here.
     .pipe(uglify())
     .on('error', log.error)
     .pipe(rename({extname: '.min.js'}))
     .pipe(sourcemaps.write('./'))
-    .pipe(dest(tasks.typescript.dest))
+    .pipe(gulp.dest(tasks.typescript.dest))
     .pipe(server.stream());
 };
 
 // CSS
 let stylesTask = () => {
-  return src(path.join(tasks.scss.src, '*.scss'), {base: tasks.scss.src})
+  return gulp.src(path.join(tasks.scss.src, '*.scss'), {base: tasks.scss.src})
     .pipe(sourcemaps.init())
     .pipe(
       sass({
@@ -73,10 +79,11 @@ let stylesTask = () => {
     )
     .pipe(postcss([autoprefixer()]))
     .pipe(sourcemaps.write('./'))
-    .pipe(dest(tasks.scss.dest))
+    .pipe(gulp.dest(tasks.scss.dest as string))
     .pipe(server.stream());
 };
 
+// Serve
 let serveTask = () => {
   server.init({
     server: '../public',
@@ -84,10 +91,6 @@ let serveTask = () => {
     ui: false
   });
 
-  /**
-   * @var IncomingMessage request
-   * @var ServerResponse response
-   */
   http.createServer((request, response) => {
     if (request.method === 'POST') {
       let body = '';
@@ -104,8 +107,8 @@ let serveTask = () => {
     }
   }).listen(9000);
 
-  watch(path.join(tasks.scss.src, '*.scss'), series(stylesTask));
-  watch(path.join(tasks.typescript.src, '*.ts'), series(typescriptTask));
+  gulp.watch(path.join(tasks.scss.src, '*.scss'), gulp.series(stylesTask));
+  gulp.watch(path.join(tasks.typescript.src, '*.ts'), gulp.series(typescriptTask));
 };
 
 /*
@@ -127,7 +130,7 @@ exports.typescript = typescriptTask;
 
 exports.scss = stylesTask;
 
-exports.build = series(typescriptTask, stylesTask);
+exports.build = gulp.series(typescriptTask, stylesTask);
 
-exports.serve = series(stylesTask, typescriptTask, serveTask);
+exports.serve = gulp.series(stylesTask, typescriptTask, serveTask);
 exports.default = exports.serve;
