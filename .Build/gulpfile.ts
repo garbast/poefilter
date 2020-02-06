@@ -79,7 +79,7 @@ let stylesTask = () => {
     )
     .pipe(postcss([autoprefixer()]))
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest(tasks.scss.dest as string))
+    .pipe(gulp.dest(tasks.scss.dest))
     .pipe(server.stream());
 };
 
