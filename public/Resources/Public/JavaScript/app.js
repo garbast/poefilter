@@ -10616,16 +10616,23 @@ var App = /** @class */ (function () {
         this.fetchTabData();
     }
     App.prototype.fetchTabData = function () {
+        var options = {
+            protocol: 'http:',
+            hostname: 'api.pathofexile.com',
+            method: 'get',
+            path: '/public-stash-tabs',
+            headers: {
+                'Cookie': "POESESSID=" + this.cookie
+            },
+            timeout: 10
+        };
         $.ajax({
             url: 'http://localhost:9000',
             method: 'POST',
-            data: {
-                endpoint: this.publicStashTabsEndpoint,
-                cookie: this.cookie
-            }
-        }).done(function (league) {
-            console.log(league);
-            console.log('Got', league.id, 'league');
+            dataType: 'json',
+            data: JSON.stringify(options)
+        }).done(function (response) {
+            console.log(response);
         });
     };
     return App;

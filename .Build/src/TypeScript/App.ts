@@ -23,16 +23,24 @@ class App {
   }
 
   fetchTabData(): void {
+    let options = {
+      protocol: 'http:',
+      hostname: 'api.pathofexile.com',
+      method: 'get',
+      path: '/public-stash-tabs',
+      headers: {
+        'Cookie': `POESESSID=${this.cookie}`
+      },
+      timeout: 10
+    };
+
     $.ajax({
       url: 'http://localhost:9000',
       method: 'POST',
-      data: {
-        endpoint: this.publicStashTabsEndpoint,
-        cookie: this.cookie
-      }
-    }).done(function(league: any) {
-      console.log(league);
-      console.log('Got', league.id, 'league');
+      dataType: 'json',
+      data: JSON.stringify(options)
+    }).done((response: any) => {
+      console.log(response);
     });
   }
 }
