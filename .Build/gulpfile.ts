@@ -42,29 +42,22 @@ const tasks = {
 const server = browserSync.create();
 
 // JS
-let typescriptTask = () => {
-  let b = browserify({
-    entries: [
-      path.join(tasks.typescript.src, 'App.ts')
-    ],
-    debug: true
-  });
-
-  return b
+let typescriptTask = async () => {
+  browserify()
+    .add(path.join(tasks.typescript.src, 'App.ts'))
     .plugin(tsify, {project: 'tsconfig.json'})
     .bundle()
+    .on('error', log.error)
+
     .pipe(source('app.js'))
     .pipe(buffer())
+    .pipe(gulp.dest(tasks.typescript.dest))
+
     .pipe(sourcemaps.init({loadMaps: true}))
-    // This will output the non-minified version
-    .pipe(gulp.dest(path.join(paths.dest, tasks.typescript.dest)))
-    // Add transformation tasks to the pipeline here.
     .pipe(uglify())
-    .on('error', log.error)
     .pipe(rename({extname: '.min.js'}))
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest(tasks.typescript.dest))
-    .pipe(server.stream());
+    .pipe(gulp.dest(tasks.typescript.dest));
 };
 
 // CSS
