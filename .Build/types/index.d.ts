@@ -40,7 +40,3 @@ declare module "gulplog" {
   export function error(msg: string, ...args: any[]): void;
   export function error(msg: any): void;
 }
-
-declare module "tsify" {
-  export function tsify(b, opts): string;
-}

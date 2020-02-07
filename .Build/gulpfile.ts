@@ -15,7 +15,6 @@ import * as rename from 'gulp-rename';
 
 // CSS
 import * as sourcemaps from 'gulp-sourcemaps';
-import * as normalize from 'node-normalize-scss';
 import * as sass from 'gulp-sass';
 import * as autoprefixer from 'autoprefixer';
 import * as postcss from 'gulp-postcss';
@@ -73,9 +72,7 @@ let stylesTask = () => {
   return gulp.src(path.join(tasks.scss.src, '*.scss'), {base: tasks.scss.src})
     .pipe(sourcemaps.init())
     .pipe(
-      sass({
-        includePaths: normalize.includePaths
-      }).on('error', sass.logError)
+      sass().on('error', sass.logError)
     )
     .pipe(postcss([autoprefixer()]))
     .pipe(sourcemaps.write('./'))
