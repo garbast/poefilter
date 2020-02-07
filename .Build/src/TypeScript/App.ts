@@ -31,6 +31,7 @@ class App {
         cookie: this.cookie
       }
     }).done(function(league: any) {
+      console.log(league);
       console.log('Got', league.id, 'league');
     });
   }

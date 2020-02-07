@@ -10624,6 +10624,7 @@ var App = /** @class */ (function () {
                 cookie: this.cookie
             }
         }).done(function (league) {
+            console.log(league);
             console.log('Got', league.id, 'league');
         });
     };
