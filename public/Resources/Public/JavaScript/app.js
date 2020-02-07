@@ -10618,9 +10618,9 @@ var App = /** @class */ (function () {
     App.prototype.fetchTabData = function () {
         var options = {
             protocol: 'http:',
-            hostname: 'api.pathofexile.com',
+            hostname: 'www.pathofexile.com',
             method: 'get',
-            path: '/public-stash-tabs',
+            path: '/character-window/get-stash-items?accountName=garbast&realm=pc&league=Metamorph&tabs=1',
             headers: {
                 'Cookie': "POESESSID=" + this.cookie
             },

@@ -30,18 +30,24 @@ export class PoeService {
   }
 
   queryPoeApi(options: {}) {
-    console.log(options);
+    http.get(options, (response: http.IncomingMessage) => {
+      let data = '';
+      response.on('data', (chunk) => {
+        data += chunk;
+      });
 
-    http.request(options, (response: http.IncomingMessage) => {
-console.log(response);
-      this.sendApiResponse();
+      response.on('end', () => {
+        this.sendApiResponse(data);
+      });
+    }).on('error', (err) => {
+      console.log('Error: ' + err.message);
     });
   }
 
-  sendApiResponse(): void {
+  sendApiResponse(data: string): void {
     this.response = this.setControlHeaders(this.response);
     this.response.writeHead(200, {'Content-Type': 'text/html'});
-    this.response.end(JSON.stringify('post received'));
+    this.response.end(data);
   }
 
   // Set CORS headers
