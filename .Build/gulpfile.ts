@@ -10,7 +10,6 @@ import * as tsify from 'tsify';
 import * as source from 'vinyl-source-stream';
 import * as buffer from 'vinyl-buffer';
 import * as uglify from 'gulp-uglify';
-import * as log from 'gulplog';
 import * as rename from 'gulp-rename';
 
 // CSS
@@ -47,7 +46,7 @@ let typescriptTask = async () => {
     .add(path.join(tasks.typescript.src, 'App.ts'))
     .plugin(tsify, {project: 'tsconfig.json'})
     .bundle()
-    .on('error', log.error)
+    .on('error', console.log)
 
     .pipe(source('app.js'))
     .pipe(buffer())
@@ -57,7 +56,9 @@ let typescriptTask = async () => {
     .pipe(uglify())
     .pipe(rename({extname: '.min.js'}))
     .pipe(sourcemaps.write('./'))
-    .pipe(dest(tasks.typescript.dest));
+
+    .pipe(dest(tasks.typescript.dest))
+    .pipe(server.stream());
 };
 
 // CSS
@@ -66,12 +67,12 @@ let stylesTask = () => {
       path.join(tasks.scss.src, '*.scss'),
       {base: tasks.scss.src}
     )
+
     .pipe(sourcemaps.init())
-    .pipe(
-      sass().on('error', sass.logError)
-    )
+    .pipe(sass().on('error', console.log))
     .pipe(postcss([autoprefixer()]))
     .pipe(sourcemaps.write('./'))
+
     .pipe(dest(tasks.scss.dest))
     .pipe(server.stream());
 };

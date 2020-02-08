@@ -10608,7 +10608,7 @@ var App = /** @class */ (function () {
         this.equippedEndpoint = 'http://www.pathofexile.com/character-window/get-items?realm=pc&accountName=$1&league=$2';
         this.tabsEndpoint = 'https://www.pathofexile.com/character-window/get-stash-items?realm=pc&accountName=$1&league=$2&tabs=1';
         this.tabEndpoint = 'https://www.pathofexile.com/character-window/get-stash-items?realm=pc&accountName=$1&league=$2&tabIndex=$3';
-        this.publicStashTabsEndpoint = 'http://api.pathofexile.com/public-stash-tabs';
+        this.publicStashTabsEndpoint = 'https://api.pathofexile.com/public-stash-tabs';
         this.leagueEndpoint = 'https://api.pathofexile.com/league/Hardcore';
         this.league = 'Metamorph';
         this.account = 'garbast';
@@ -10617,7 +10617,7 @@ var App = /** @class */ (function () {
     }
     App.prototype.fetchTabData = function () {
         var options = {
-            protocol: 'http:',
+            protocol: 'https:',
             hostname: 'www.pathofexile.com',
             method: 'get',
             path: '/character-window/get-stash-items?accountName=garbast&realm=pc&league=Metamorph&tabs=1',

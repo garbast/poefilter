@@ -8,7 +8,7 @@ class App {
 
   protected tabEndpoint: string = 'https://www.pathofexile.com/character-window/get-stash-items?realm=pc&accountName=$1&league=$2&tabIndex=$3';
 
-  protected publicStashTabsEndpoint: string = 'http://api.pathofexile.com/public-stash-tabs';
+  protected publicStashTabsEndpoint: string = 'https://api.pathofexile.com/public-stash-tabs';
 
   protected leagueEndpoint: string = 'https://api.pathofexile.com/league/Hardcore';
 
@@ -24,7 +24,7 @@ class App {
 
   fetchTabData(): void {
     let options = {
-      protocol: 'http:',
+      protocol: 'https:',
       hostname: 'www.pathofexile.com',
       method: 'get',
       path: '/character-window/get-stash-items?accountName=garbast&realm=pc&league=Metamorph&tabs=1',
