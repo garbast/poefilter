@@ -1,26 +1,41 @@
 import * as request from 'request-promise';
 import PoeCache from './PoeCache';
+import AppView from './View/App';
+import TabSwitchView from './View/TabSwitch';
+import TabContentView from './View/TabContent';
+import { tabsData } from './Tabs';
+import { tab8Data } from './Tab8';
 
 interface Endpoints extends Object {
-  getAccount?: string,
-  getCharacters?: string,
-  getItems?: string,
-  getPassivSkills?: string,
+  getAccount?: string;
+  getCharacters?: string;
+  getItems?: string;
+  getPassivSkills?: string;
 
-  getStashItemsTabs?: string,
-  getStashItemsSingleTab?: string,
+  getStashItemsTabs?: string;
+  getStashItemsSingleTab?: string;
 
-  getMtxStashItemsTabs?: string,
-  getMtxStashItemsSingleTab?: string,
+  getMtxStashItemsTabs?: string;
+  getMtxStashItemsSingleTab?: string;
 
-  publicStashTabs?: string,
-  leagues?: string,
-  leagueRules?: string,
-  ladders?: string,
-  pvpMatches?: string,
+  publicStashTabs?: string;
+  leagues?: string;
+  leagueRules?: string;
+  ladders?: string;
+  pvpMatches?: string;
+
+  [ key: string ]: any;
 }
 
-class App {
+export class App {
+  public view: AppView;
+
+  protected cache: PoeCache;
+
+  protected accountText: RegExp = /\/account\/view-profile\/(.*?)"/;
+
+  protected cookieTest: RegExp = /^[0-9A-Fa-f]{32}$/;
+
   // https://www.pathofexile.com/character-window/get-stash-items?accountName=garbast&realm=pc&league=Metamorph&tabs=1
   protected host: string = 'api.pathofexile.com';
 
@@ -48,30 +63,54 @@ class App {
     pvpMatches: '/pvp-matches'
   };
 
-  // {Standard,Hardcore,Blight,Metamorph}
-  protected league: string = 'Metamorph';
-
   protected currentTab: number = 0;
 
-  protected cache: PoeCache;
-
-  protected account: string;
-  protected accountText: RegExp = /\/account\/view-profile\/(.*?)/;
-
-  protected cookie: string;
-  protected cookieTest: RegExp = /^[0-9A-Fa-f]{32}$/;
-
   constructor() {
+    this.view = new AppView();
     this.cache = new PoeCache();
-    /*for (let endpoint of Object.values(this.endpoints)) {
-    }*/
-    this.fetchTabData(this.endpoints.getCharacters);
+
+    if (this.cache.account === '') {
+      this.getAccountName();
+    } else {
+      this.fetchTabs();
+    }
   }
 
-  fetchTabData(endpoint: string): void {
-    let path = endpoint
-        .replace('{account}', this.account)
-        .replace('{league}', this.league)
+  getAccountName() {
+    this.getApiRequestPromis('getAccount')
+      .then((response: string) => {
+        let accountNameMatches = response.match(this.accountText);
+        if (!accountNameMatches[1]) {
+          console.error(`[AUTHORIZE] Failed to identify account name: ${response}`);
+        }
+
+        this.cache.account = decodeURIComponent(accountNameMatches[1]);
+
+        this.fetchTabs();
+      });
+  }
+
+  fetchTabs() {
+    return new TabSwitchView(tabsData, this);
+    this.getApiRequestPromis('getStashItemsTabs')
+      .then((tabsData: string) => {
+        new TabSwitchView(tabsData, this);
+      });
+  }
+
+  fetchTab(index: number) {
+    this.currentTab = index;
+    return new TabContentView(tab8Data, this);
+    this.getApiRequestPromis('getStashItemsSingleTab')
+      .then((tabData: string) => {
+        new TabContentView(tabData, this);
+      });
+  }
+
+  getApiRequestPromis(endpoint: string): request.RequestPromise {
+    let path = (this.endpoints[endpoint] as string)
+        .replace('{account}', this.cache.account)
+        .replace('{league}', this.cache.league)
         .replace('{tab}', this.currentTab.toString()),
       query = {
         host: this.host,
@@ -83,11 +122,7 @@ class App {
         form: JSON.stringify(query)
       };
 
-    request.post(options).then((response: string) => {
-      console.log(response);
-    }).catch((err) => {
-      console.log('App Error: ' + err.message);
-    })
+    return request.post(options);
   }
 }
 

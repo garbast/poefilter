@@ -1,8 +1,103 @@
 @import 'normalize';
 
 #app {
-  display: block;
-  height: 50px;
-  width: 50px;
-  background-color: red;
+    display: block;
+    height: 831px;
+    width: 805px;
+    background-color: #0d161e;
+}
+
+.tabBar {
+    width: 805px;
+    max-width: 100%;
+    height: 26px;
+    margin: 0;
+    position: relative;
+
+    .tabBarSlider {
+        width: calc(100% - 52px);
+        margin: 0 26px;
+        overflow: hidden;
+        position: absolute;
+    }
+
+    .tabBarLeft,
+    .tabBarRight {
+        width: 26px;
+        height: 26px;
+        display: block;
+        position: absolute;
+    }
+    .tabBarRight {
+        right: 0;
+    }
+}
+
+#tabSwitch {
+    display: flex;
+    flex-direction: row;
+    height: 26px;
+    width: 1083px;
+    margin: 0;
+    padding: 0;
+
+    li {
+        display: flex;
+        flex-direction: row;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+
+        span {
+            padding: 6px 0;
+        }
+        &.active span {
+            background-position: left bottom;
+        }
+        .left {
+            display: block;
+            height: 14px;
+            width: 19px;
+        }
+        .center {
+            display: block;
+            height: 14px;
+            width: 19px;
+        }
+        .right {
+            display: block;
+            height: 14px;
+            width: 19px;
+        }
+    }
+}
+
+#tab {
+    display: block;
+    height: 804px;
+    width: 804px;
+    position: relative;
+
+    border: 1px solid #473927;
+    border-left: none;
+    border-top: none;
+
+    .cell {
+        display: block;
+        height: 66px;
+        position: absolute;
+        width: 66px;
+        border: 1px solid #473927;
+        border-right: none;
+        border-bottom: none;
+
+        img {
+            height: 100%;
+            width: 100%;
+        }
+    }
+    .doublet {
+        background-color: red;
+    }
 }

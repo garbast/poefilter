@@ -87,7 +87,7 @@ let serveTask = () => {
   new PoeProxy();
 
   watch(path.join(tasks.scss.src, '*.scss'), stylesTask);
-  watch(path.join(tasks.typescript.src, '*.ts'), typescriptTask);
+  watch(path.join(tasks.typescript.src, '**/*.ts'), typescriptTask);
 };
 
 exports.typescript = typescriptTask;
