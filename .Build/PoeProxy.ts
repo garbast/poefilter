@@ -1,5 +1,5 @@
 import * as http from 'http';
-import * as https from 'https';
+import * as request from 'request-promise';
 
 interface Callback {
   (data: string): void;
@@ -26,20 +26,17 @@ export class PoeProxy {
   }
 
   queryPoeApi(data: string) {
-    const options = JSON.parse(data),
-      requestOptions: https.RequestOptions = {
-        protocol: 'https:',
-        method: 'get',
-        timeout: 10,
-        host: options.host,
-        path: options.path,
+    const query = JSON.parse(data),
+      requestOptions = {
+        uri: `https://${query.host}${query.path}`,
         headers: {
-          'Cookie': `${this.cookieName}=${options.cookie}`
+          'Cookie': `${this.cookieName}=${query.cookie}`
         }
       };
-    https.get(requestOptions, (response: http.IncomingMessage) => {
-      this.getPostData(response, this.sendApiResponse.bind(this));
-    }).on('error', (err) => {
+
+    request.get(requestOptions).then((response: string) => {
+      this.sendApiResponse(response);
+    }).catch((err) => {
       console.log('PoeApi Error: ' + err.message);
     });
   }

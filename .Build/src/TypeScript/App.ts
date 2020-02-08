@@ -1,5 +1,5 @@
-import * as $ from 'jquery';
-import PoeCache from "./PoeCache";
+import * as request from 'request-promise';
+import PoeCache from './PoeCache';
 
 interface Endpoints extends Object {
   getAccount?: string,
@@ -63,9 +63,9 @@ class App {
 
   constructor() {
     this.cache = new PoeCache();
-    for (let endpoint of Object.values(this.endpoints)) {
-      this.fetchTabData(endpoint);
-    }
+    /*for (let endpoint of Object.values(this.endpoints)) {
+    }*/
+    this.fetchTabData(this.endpoints.getCharacters);
   }
 
   fetchTabData(endpoint: string): void {
@@ -73,20 +73,21 @@ class App {
         .replace('{account}', this.account)
         .replace('{league}', this.league)
         .replace('{tab}', this.currentTab.toString()),
+      query = {
+        host: this.host,
+        path: path,
+        cookie: this.cache.cookie
+      },
       options = {
-      host: this.host,
-      path: path,
-      cookie: this.cookie
-    };
-console.log(`https://${options.host}${options.path}`);
-    /*$.ajax({
-      url: 'http://localhost:9000',
-      method: 'POST',
-      dataType: 'json',
-      data: JSON.stringify(options)
-    }).done((response: any) => {
+        uri: 'http://localhost:9000',
+        form: JSON.stringify(query)
+      };
+
+    request.post(options).then((response: string) => {
       console.log(response);
-    });*/
+    }).catch((err) => {
+      console.log('App Error: ' + err.message);
+    })
   }
 }
 

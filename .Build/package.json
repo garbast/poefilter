@@ -10,7 +10,8 @@
   "author": "Sebastian Fischer",
   "license": "GPL-2.0-or-later",
   "dependencies": {
-    "jquery": "^3.4.1"
+    "jquery": "^3.4.1",
+    "request-promise": "^4.2.5"
   },
   "devDependencies": {
     "@types/autoprefixer": "^9.6.1",
@@ -24,6 +25,7 @@
     "@types/gulp-uglify": "^3.0.6",
     "@types/jquery": "^3.3.32",
     "@types/node": "^13.7.0",
+    "@types/request-promise": "^4.1.45",
     "@types/vinyl-buffer": "^1.0.0",
     "@types/vinyl-source-stream": "0.0.30",
     "autoprefixer": "^9.6.1",
