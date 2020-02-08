@@ -20,7 +20,7 @@ import * as postcss from 'gulp-postcss';
 
 // Serve
 import * as browserSync from 'browser-sync';
-import { PoeService } from './PoeService';
+import { PoeProxy } from './PoeProxy';
 
 const paths = {
   src: 'src',
@@ -85,7 +85,7 @@ let serveTask = () => {
     ui: false
   });
 
-  new PoeService();
+  new PoeProxy();
 
   watch(path.join(tasks.scss.src, '*.scss'), stylesTask);
   watch(path.join(tasks.typescript.src, '*.ts'), typescriptTask);

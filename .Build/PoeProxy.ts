@@ -5,7 +5,9 @@ interface Callback {
   (data: string): void;
 }
 
-export class PoeService {
+export class PoeProxy {
+  protected cookieName: string = 'POESESSID';
+
   protected response: http.ServerResponse;
 
   constructor() {
@@ -24,15 +26,25 @@ export class PoeService {
   }
 
   queryPoeApi(data: string) {
-    let options = JSON.parse(data);
-    https.get(options, (response: http.IncomingMessage) => {
+    const options = JSON.parse(data),
+      requestOptions: https.RequestOptions = {
+        protocol: 'https:',
+        method: 'get',
+        timeout: 10,
+        host: options.host,
+        path: options.path,
+        headers: {
+          'Cookie': `${this.cookieName}=${options.cookie}`
+        }
+      };
+    https.get(requestOptions, (response: http.IncomingMessage) => {
       this.getPostData(response, this.sendApiResponse.bind(this));
     }).on('error', (err) => {
       console.log('PoeApi Error: ' + err.message);
     });
   }
 
-  sendApiResponse(data: string): void {
+  sendApiResponse(data: string) {
     this.response = this.setControlHeaders(this.response);
     this.response.writeHead(200, {'Content-Type': 'text/html'});
     this.response.end(data);
