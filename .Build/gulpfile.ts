@@ -6,7 +6,6 @@ import * as path from 'path';
 
 // JS
 import * as browserify from 'browserify';
-import * as tsify from 'tsify';
 import * as source from 'vinyl-source-stream';
 import * as buffer from 'vinyl-buffer';
 import * as uglify from 'gulp-uglify';
@@ -44,7 +43,7 @@ const server = browserSync.create();
 let typescriptTask = async () => {
   browserify()
     .add(path.join(tasks.typescript.src, 'App.ts'))
-    .plugin(tsify, {project: 'tsconfig.json'})
+    .plugin('tsify', {project: 'tsconfig.json'})
     .bundle()
     .on('error', console.log)
 
