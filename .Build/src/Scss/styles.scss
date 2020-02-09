@@ -73,7 +73,7 @@
     }
 }
 
-#tab {
+#tabContent {
     display: block;
     height: 804px;
     width: 804px;
@@ -89,6 +89,7 @@
         position: absolute;
         width: 66px;
         border: 1px solid #473927;
+        background-color: #080808;
         border-right: none;
         border-bottom: none;
 
@@ -97,7 +98,22 @@
             width: 100%;
         }
     }
+    .active {
+        background-color: #02021d;
+    }
     .doublet {
-        background-color: red;
+        background-color: #2b0404;
+    }
+
+    .notImplemented {
+        display: block;
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #c19c73;
+        color: #080808;
+        padding: 10px;
     }
 }

@@ -1,31 +1,20 @@
-import { App } from '../App';
-import { Abstract, StashItems, Tab } from './Abstract';
+import { Base, Tab } from './Base';
 
+export default class TabSwitch extends Base {
+  protected elementId: string = 'tabSwitch';
 
-export default class TabSwitch extends Abstract {
-  protected app: App;
-
-  protected element: HTMLElement;
-
-  protected data: StashItems;
-
-  constructor(tabData: string, app: App) {
-    super();
-    this.app = app;
-    this.element = window.document.getElementById('tabSwitch');
-    this.element.innerHTML = '';
-    this.data = JSON.parse(tabData);
-
-    this.renderTabs(this.data);
+  initialize(tabData: string) {
+    this.initializeElement();
+    this.processData(tabData);
+    this.render();
     this.attachEvents();
   }
 
-  renderTabs(data: StashItems) {
-    data.tabs.forEach((tab: Tab) => {
-      let switchElement = document.createElement('li');
-      switchElement.id = tab.id;
-      switchElement.dataset.index = tab.i.toString();
-      switchElement.style.color = `rgb(${tab.colour.r}, ${tab.colour.g}, ${tab.colour.b})`;
+  render() {
+    this.data.tabs.forEach((tab: Tab) => {
+      let tabElement = document.createElement('li');
+      tabElement.tab = tab;
+      tabElement.style.color = `rgb(${tab.colour.r}, ${tab.colour.g}, ${tab.colour.b})`;
 
       let spanL = this.getSpan('', 'left'),
         spanC = this.getSpan(tab.n, 'center'),
@@ -35,12 +24,12 @@ export default class TabSwitch extends Abstract {
       spanC.style.backgroundImage = `url(${tab.srcC})`;
       spanR.style.backgroundImage = `url(${tab.srcR})`;
 
-      switchElement.append(spanL);
-      switchElement.append(spanC);
-      switchElement.append(spanR);
+      tabElement.appendChild(spanL);
+      tabElement.appendChild(spanC);
+      tabElement.appendChild(spanR);
 
-      tab.element = switchElement;
-      this.element.append(switchElement);
+      tab.element = tabElement;
+      this.element.appendChild(tabElement);
     });
   }
 
@@ -48,9 +37,9 @@ export default class TabSwitch extends Abstract {
     let leftArrow: HTMLElement = (this.app.view.getElementsByClassName('tabBarLeft')[0] as HTMLElement),
       rightArrow: HTMLElement = (this.app.view.getElementsByClassName('tabBarRight')[0] as HTMLElement);
 
-    this.attachEvent(leftArrow, 'click', this.clickLeftArrow.bind(this));
-    this.attachEvent(rightArrow, 'click', this.clickRightArrow.bind(this));
-    this.attachEvent(this.element, 'click', this.clickTabSwitch.bind(this));
+    this.attachEventToElement(leftArrow, 'click', this.clickLeftArrow.bind(this));
+    this.attachEventToElement(rightArrow, 'click', this.clickRightArrow.bind(this));
+    this.attachEventToElement(this.element, 'click', this.clickTabSwitch.bind(this));
   }
 
   clickLeftArrow() {
@@ -71,16 +60,16 @@ export default class TabSwitch extends Abstract {
   }
 
   clickTabSwitch(event: Event) {
-    let targetParent = (event.target as HTMLElement).parentElement;
+    let tabElement: HTMLLIElement = ((event.target as HTMLElement).parentElement as HTMLLIElement);
 
     [...(this.element.getElementsByTagName('li') as unknown as HTMLElement[])]
       .forEach((element: HTMLElement) => {
         element.classList.remove('current');
       });
 
-    if (targetParent.tagName.toLowerCase() === 'li') {
-      targetParent.classList.add('current');
-      this.app.fetchTab(parseInt(targetParent.dataset.index));
+    if (tabElement.tagName.toLowerCase() === 'li') {
+      tabElement.classList.add('current');
+      this.app.fetchTab(tabElement.tab);
     }
   }
 }

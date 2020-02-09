@@ -334,7 +334,7 @@ template, [hidden] {
     text-align: center; }
     #tabSwitch li span {
       padding: 6px 0; }
-    #tabSwitch li.active span {
+    #tabSwitch li.current span {
       background-position: left bottom; }
     #tabSwitch li .left {
       display: block;
@@ -349,7 +349,7 @@ template, [hidden] {
       height: 14px;
       width: 19px; }
 
-#tab {
+#tabContent {
   display: block;
   height: 804px;
   width: 804px;
@@ -357,18 +357,33 @@ template, [hidden] {
   border: 1px solid #473927;
   border-left: none;
   border-top: none; }
-  #tab .cell {
+  #tabContent .cell {
     display: block;
     height: 66px;
     position: absolute;
     width: 66px;
     border: 1px solid #473927;
+    background-color: #080808;
     border-right: none;
     border-bottom: none; }
-    #tab .cell img {
+    #tabContent .cell img {
       height: 100%;
       width: 100%; }
-  #tab .doublet {
-    background-color: red; }
+  #tabContent .active {
+    background-color: #02021d; }
+  #tabContent .doublet {
+    background-color: #2b0404; }
+  #tabContent .notImplemented {
+    display: block;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+    background-color: #c19c73;
+    color: #080808;
+    padding: 10px; }
 
 /*# sourceMappingURL=styles.css.map */

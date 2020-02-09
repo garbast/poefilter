@@ -1,10 +1,9 @@
 import * as request from 'request-promise';
 import PoeCache from './PoeCache';
 import AppView from './View/App';
-import TabSwitchView from './View/TabSwitch';
-import TabContentView from './View/TabContent';
-import { tabsData } from './Tabs';
-import { tab8Data } from './Tab8';
+import { Tab } from './View/Base';
+import TabSwitch from './View/TabSwitch';
+import ViewFactory from './Utility/ViewFactory';
 
 interface Endpoints extends Object {
   getAccount?: string;
@@ -23,6 +22,13 @@ interface Endpoints extends Object {
   leagueRules?: string;
   ladders?: string;
   pvpMatches?: string;
+}
+
+interface ApiRequestParameter extends Object {
+  character?: string;
+  account?: string;
+  league?: string;
+  tabIndex?: string;
 
   [ key: string ]: any;
 }
@@ -46,10 +52,10 @@ export class App {
     getPassivSkills: '/character-window/get-passive-skills?character={character}',
 
     getStashItemsTabs: '/character-window/get-stash-items?accountName={account}&league={league}&tabs=1',
-    getStashItemsSingleTab: '/character-window/get-stash-items?accountName={account}&league={league}&tabIndex={tab}',
+    getStashItemsSingleTab: '/character-window/get-stash-items?accountName={account}&league={league}&tabIndex={tabIndex}',
 
     getMtxStashItemsTabs: '/character-window/get-stash-items?accountName={account}&league={league}&tabs=1',
-    getMtxStashItemsSingleTab: '/character-window/get-stash-items?accountName={account}&league={league}&tabIndex={tab}',
+    getMtxStashItemsSingleTab: '/character-window/get-stash-items?accountName={account}&league={league}&tabIndex={tabIndex}',
 
     // https://www.pathofexile.com/developer/docs/api-resource-public-stash-tabs
     publicStashTabs: '/public-stash-tabs',
@@ -63,8 +69,6 @@ export class App {
     pvpMatches: '/pvp-matches'
   };
 
-  protected currentTab: number = 0;
-
   constructor() {
     this.view = new AppView();
     this.cache = new PoeCache();
@@ -77,7 +81,7 @@ export class App {
   }
 
   getAccountName() {
-    this.getApiRequestPromis('getAccount')
+    this.getApiRequestPromise(this.endpoints.getAccount, {})
       .then((response: string) => {
         let accountNameMatches = response.match(this.accountText);
         if (!accountNameMatches[1]) {
@@ -91,38 +95,43 @@ export class App {
   }
 
   fetchTabs() {
-    return new TabSwitchView(tabsData, this);
-    this.getApiRequestPromis('getStashItemsTabs')
+    this.getApiRequestPromise(this.endpoints.getStashItemsTabs, {
+      account: this.cache.account,
+      league: this.cache.league
+    })
       .then((tabsData: string) => {
-        new TabSwitchView(tabsData, this);
+        (new TabSwitch(this)).initialize(tabsData);
       });
   }
 
-  fetchTab(index: number) {
-    this.currentTab = index;
-    return new TabContentView(tab8Data, this);
-    this.getApiRequestPromis('getStashItemsSingleTab')
+  fetchTab(tab: Tab) {
+    this.getApiRequestPromise(this.endpoints.getStashItemsSingleTab, {
+      account: this.cache.account,
+      league: this.cache.league,
+      tabIndex: tab.i.toString()
+    })
       .then((tabData: string) => {
-        new TabContentView(tabData, this);
+        ViewFactory.getInstance(this, tab, tabData);
       });
   }
 
-  getApiRequestPromis(endpoint: string): request.RequestPromise {
-    let path = (this.endpoints[endpoint] as string)
-        .replace('{account}', this.cache.account)
-        .replace('{league}', this.cache.league)
-        .replace('{tab}', this.currentTab.toString()),
-      query = {
+  getApiRequestPromise(path: string, options: ApiRequestParameter): request.RequestPromise {
+    for (let property in options) {
+      if (options.hasOwnProperty(property)) {
+        path = path.replace(`{${property}}`, options[property]);
+      }
+    }
+
+    let requestOptions = {
+      uri: 'http://localhost:9000',
+      form: JSON.stringify({
         host: this.host,
         path: path,
         cookie: this.cache.cookie
-      },
-      options = {
-        uri: 'http://localhost:9000',
-        form: JSON.stringify(query)
-      };
+      })
+    };
 
-    return request.post(options);
+    return request.post(requestOptions);
   }
 }
 
