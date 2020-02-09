@@ -111,6 +111,7 @@ export class App {
       tabIndex: tab.i.toString()
     })
       .then((tabData: string) => {
+        // test
         ViewFactory.getInstance(this, tab, tabData);
       });
   }

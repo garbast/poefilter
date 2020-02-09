@@ -91203,6 +91203,7 @@ var App = /** @class */ (function () {
             tabIndex: tab.i.toString()
         })
             .then(function (tabData) {
+            // test
             ViewFactory_1.default.getInstance(_this, tab, tabData);
         });
     };

@@ -1,7 +1,7 @@
 'use strict';
 
 // Common
-import {src, dest, series, watch} from 'gulp';
+import { src, dest, series, watch } from 'gulp';
 import * as path from 'path';
 
 // JS
@@ -41,7 +41,7 @@ const server = browserSync.create();
 
 // JS
 let typescriptTask = async () => {
-  browserify()
+  return browserify()
     .add(path.join(tasks.typescript.src, 'App.ts'))
     .plugin('tsify', {project: 'tsconfig.json'})
     .bundle()
