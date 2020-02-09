@@ -91310,12 +91310,12 @@ var TabContent = /** @class */ (function (_super) {
         _this.element.innerHTML = '';
         _this.data = JSON.parse(tabData);
         _this.createGrid(_this.data, _this.rows, _this.cols);
+        _this.addItemsToGrid(_this.data.items);
         _this.renderTabContent(_this.grid, _this.rows, _this.cols);
-        console.log(_this.grid);
+        console.log(_this.grid[0][0]);
         return _this;
     }
     TabContent.prototype.createGrid = function (data, x, y) {
-        var _this = this;
         for (var i = 0; i < x; i++) {
             var row = [];
             for (var j = 0; j < y; j++) {
@@ -91323,16 +91323,29 @@ var TabContent = /** @class */ (function (_super) {
             }
             this.grid[i] = row;
         }
-        data.items.forEach(function (item) {
+    };
+    TabContent.prototype.addItemsToGrid = function (items) {
+        var _this = this;
+        items.forEach(function (item) {
+            items.forEach(function (item2) {
+                if (item.typeLine === item2.typeLine) {
+                    item.doublet = item2.doublet = true;
+                }
+            });
             _this.grid[item.y][item.x] = item;
         });
     };
-    TabContent.prototype.renderTabContent = function (data, x, y) {
+    TabContent.prototype.renderTabContent = function (grid, x, y) {
         for (var i = 0; i < x; i++) {
             for (var j = 0; j < y; j++) {
-                var item = data[i][j], span = this.getSpan('', 'cell');
+                var item = grid[i][j], span = this.getSpan('', 'cell');
                 span.style.top = (i * 67) + 'px';
                 span.style.left = (j * 67) + 'px';
+                span.style.width = (item.w * 66) + (item.w - 1) + 'px';
+                span.style.height = (item.h * 66) + (item.h - 1) + 'px';
+                if (item.doublet) {
+                    span.classList.add('doublet');
+                }
                 if (item.icon) {
                     var icon = window.document.createElement('img');
                     icon.src = item.icon;
@@ -91363,6 +91376,26 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __spread = (this && this.__spread) || function () {
+    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
+    return ar;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var Abstract_1 = require("./Abstract");
 var TabSwitch = /** @class */ (function (_super) {
@@ -91402,15 +91435,22 @@ var TabSwitch = /** @class */ (function (_super) {
         this.attachEvent(this.element, 'click', this.clickTabSwitch.bind(this));
     };
     TabSwitch.prototype.clickLeftArrow = function () {
-        this.element.style.marginLeft = '0';
+        var marginLeft = 0, currentMargin = parseInt(this.element.style.marginLeft || '0');
+        currentMargin = Math.min(currentMargin + 57, marginLeft);
+        this.element.style.marginLeft = currentMargin + "px";
     };
     TabSwitch.prototype.clickRightArrow = function () {
-        var tabBar = this.app.view.getElementsByClassName('tabBar')[0], leftMargin = ((this.element.offsetWidth - tabBar.offsetWidth) + 52) * -1;
-        this.element.style.marginLeft = leftMargin + "px";
+        var tabBar = this.app.view.getElementsByClassName('tabBar')[0], marginLeft = ((this.element.offsetWidth - tabBar.offsetWidth) + 52) * -1, currentMargin = parseInt(this.element.style.marginLeft || '0');
+        currentMargin = Math.max(currentMargin - 57, marginLeft);
+        this.element.style.marginLeft = currentMargin + "px";
     };
     TabSwitch.prototype.clickTabSwitch = function (event) {
         var targetParent = event.target.parentElement;
+        __spread(this.element.getElementsByTagName('li')).forEach(function (element) {
+            element.classList.remove('current');
+        });
         if (targetParent.tagName.toLowerCase() === 'li') {
+            targetParent.classList.add('current');
             this.app.fetchTab(parseInt(targetParent.dataset.index));
         }
     };

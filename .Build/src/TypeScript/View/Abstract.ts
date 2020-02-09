@@ -28,6 +28,7 @@ export interface Item {
   x: number;
   y: number;
   inventoryId: string;
+  doublet?: boolean;
   element?: HTMLElement;
 }
 

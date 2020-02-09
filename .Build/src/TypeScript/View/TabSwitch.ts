@@ -54,18 +54,32 @@ export default class TabSwitch extends Abstract {
   }
 
   clickLeftArrow() {
-    this.element.style.marginLeft = '0';
+    let marginLeft = 0,
+      currentMargin = parseInt(this.element.style.marginLeft || '0');
+
+    currentMargin = Math.min(currentMargin + 57, marginLeft);
+    this.element.style.marginLeft = `${currentMargin}px`;
   }
 
   clickRightArrow() {
     let tabBar: HTMLDivElement = (this.app.view.getElementsByClassName('tabBar')[0] as HTMLDivElement),
-      leftMargin = ((this.element.offsetWidth - tabBar.offsetWidth) + 52) * -1;
-    this.element.style.marginLeft = `${leftMargin}px`;
+      marginLeft = ((this.element.offsetWidth - tabBar.offsetWidth) + 52) * -1,
+      currentMargin = parseInt(this.element.style.marginLeft || '0');
+
+    currentMargin = Math.max(currentMargin - 57, marginLeft);
+    this.element.style.marginLeft = `${currentMargin}px`;
   }
 
   clickTabSwitch(event: Event) {
     let targetParent = (event.target as HTMLElement).parentElement;
+
+    [...(this.element.getElementsByTagName('li') as unknown as HTMLElement[])]
+      .forEach((element: HTMLElement) => {
+        element.classList.remove('current');
+      });
+
     if (targetParent.tagName.toLowerCase() === 'li') {
+      targetParent.classList.add('current');
       this.app.fetchTab(parseInt(targetParent.dataset.index));
     }
   }
