@@ -1,5 +1,10 @@
 import * as http from 'http';
-import * as request from 'request-promise';
+import * as request from 'request-promise-native';
+
+let logger  = require('eazy-logger').Logger({
+  prefix: '[{blue:POEProxy}] ',
+  useLevelPrefixes: false
+});
 
 interface Callback {
   (data: string): void;
@@ -22,7 +27,13 @@ export class PoeProxy {
       }
     }).on('error', (err) => {
       console.log('Proxy Error: ' + err.message);
-    }).listen(9000);
+    }).listen(9009);
+
+    logger.unprefixed('info', '{grey: %s', '-----------------------------------');
+    logger.info('Proxy URL:');
+    logger.unprefixed('info', '{grey: %s', '-----------------------------------');
+    logger.unprefixed('info', '    Local: http://localhost:9009');
+    logger.unprefixed('info', '{grey: %s', '-----------------------------------');
   }
 
   queryPoeApi(data: string) {

@@ -9,7 +9,7 @@ interface Endpoints extends Object {
   getAccount?: string;
   getCharacters?: string;
   getItems?: string;
-  getPassivSkills?: string;
+  getPassiveSkills?: string;
 
   getStashItemsTabs?: string;
   getStashItemsSingleTab?: string;
@@ -49,7 +49,7 @@ export class App {
     getAccount: '/my-account',
     getCharacters: '/character-window/get-characters',
     getItems: '/character-window/get-items?character={character}',
-    getPassivSkills: '/character-window/get-passive-skills?character={character}',
+    getPassiveSkills: '/character-window/get-passive-skills?character={character}',
 
     getStashItemsTabs: '/character-window/get-stash-items?accountName={account}&league={league}&tabs=1',
     getStashItemsSingleTab: '/character-window/get-stash-items?accountName={account}&league={league}&tabIndex={tabIndex}',
@@ -124,7 +124,7 @@ export class App {
     }
 
     let requestOptions = {
-      uri: 'http://localhost:9000',
+      uri: 'http://localhost:9009',
       form: JSON.stringify({
         host: this.host,
         path: path,

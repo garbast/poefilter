@@ -96,5 +96,5 @@ exports.scss = stylesTask;
 
 exports.build = series(typescriptTask, stylesTask);
 
-exports.serve = series(stylesTask, typescriptTask, serveTask);
+exports.serve = serveTask;
 exports.default = exports.serve;

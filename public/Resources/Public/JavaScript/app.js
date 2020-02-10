@@ -91148,7 +91148,7 @@ var App = /** @class */ (function () {
             getAccount: '/my-account',
             getCharacters: '/character-window/get-characters',
             getItems: '/character-window/get-items?character={character}',
-            getPassivSkills: '/character-window/get-passive-skills?character={character}',
+            getPassiveSkills: '/character-window/get-passive-skills?character={character}',
             getStashItemsTabs: '/character-window/get-stash-items?accountName={account}&league={league}&tabs=1',
             getStashItemsSingleTab: '/character-window/get-stash-items?accountName={account}&league={league}&tabIndex={tabIndex}',
             getMtxStashItemsTabs: '/character-window/get-stash-items?accountName={account}&league={league}&tabs=1',
@@ -91214,7 +91214,7 @@ var App = /** @class */ (function () {
             }
         }
         var requestOptions = {
-            uri: 'http://localhost:9000',
+            uri: 'http://localhost:9009',
             form: JSON.stringify({
                 host: this.host,
                 path: path,
@@ -91658,25 +91658,16 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __read = (this && this.__read) || function (o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m) return o;
-    var i = m.call(o), r, ar = [], e;
-    try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-    }
-    catch (error) { e = { error: error }; }
-    finally {
-        try {
-            if (r && !r.done && (m = i["return"])) m.call(i);
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
         }
-        finally { if (e) throw e.error; }
-    }
-    return ar;
-};
-var __spread = (this && this.__spread) || function () {
-    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
-    return ar;
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Base_1 = require("./Base");
@@ -91727,10 +91718,21 @@ var TabSwitch = /** @class */ (function (_super) {
         this.element.style.marginLeft = currentMargin + "px";
     };
     TabSwitch.prototype.clickTabSwitch = function (event) {
-        var tabElement = event.target.parentElement;
-        __spread(this.element.getElementsByTagName('li')).forEach(function (element) {
-            element.classList.remove('current');
-        });
+        var e_1, _a;
+        var tabElement = event.target.parentElement, tabs = this.element.getElementsByTagName('li');
+        try {
+            for (var tabs_1 = __values(tabs), tabs_1_1 = tabs_1.next(); !tabs_1_1.done; tabs_1_1 = tabs_1.next()) {
+                var element = tabs_1_1.value;
+                element.classList.remove('current');
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (tabs_1_1 && !tabs_1_1.done && (_a = tabs_1.return)) _a.call(tabs_1);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
         if (tabElement.tagName.toLowerCase() === 'li') {
             tabElement.classList.add('current');
             this.app.fetchTab(tabElement.tab);

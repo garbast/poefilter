@@ -60,12 +60,12 @@ export default class TabSwitch extends Base {
   }
 
   clickTabSwitch(event: Event) {
-    let tabElement: HTMLLIElement = ((event.target as HTMLElement).parentElement as HTMLLIElement);
+    let tabElement: HTMLLIElement = ((event.target as HTMLElement).parentElement as HTMLLIElement),
+      tabs: any = this.element.getElementsByTagName('li');
 
-    [...(this.element.getElementsByTagName('li') as unknown as HTMLElement[])]
-      .forEach((element: HTMLElement) => {
-        element.classList.remove('current');
-      });
+    for (let element of tabs) {
+      element.classList.remove('current');
+    }
 
     if (tabElement.tagName.toLowerCase() === 'li') {
       tabElement.classList.add('current');
